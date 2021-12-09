@@ -1,4 +1,4 @@
-module go-tools
+module github.com/sanmiaohu/go-tools
 
 go 1.17
 
