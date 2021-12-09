@@ -42,9 +42,9 @@ func Error(c *gin.Context, err error, status ...int) {
 }
 
 func rid(c *gin.Context) string {
-	id := c.Value("x-request-id").(string)
-	if id == "" {
+	id := c.Value("x-request-id")
+	if id == nil {
 		id = uuid.NewV4().String()
 	}
-	return id
+	return id.(string)
 }
