@@ -13,8 +13,15 @@ type ApiResponse struct {
 }
 
 func Success(c *gin.Context, v interface{}) {
+        xid,ok := c.Get("x-request-id")
+		if !ok {
+			ut := time.Now().UnixMicro()
+			m := md5.New()
+			m.Write([]byte(strconv.Itoa(int(ut))))
+			xid = m.Sum([]byte(""))
+		}
 	resp := ApiResponse{
-		RID:     c.Value("x-request-id").(string),
+		RID:     xid,
 		Code:    200,
 		Message: "message",
 		Data:    v,
