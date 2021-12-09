@@ -2,10 +2,8 @@ package utils
 
 import (
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 	"net/http"
-        "strconv"
-	"time"
-	"crypto/md5"
 )
 
 type ApiResponse struct {
@@ -16,15 +14,8 @@ type ApiResponse struct {
 }
 
 func Success(c *gin.Context, v interface{}) {
-        xid,ok := c.Get("x-request-id")
-		if !ok {
-			ut := time.Now().UnixMicro()
-			m := md5.New()
-			m.Write([]byte(strconv.Itoa(int(ut))))
-			xid = m.Sum([]byte(""))
-		}
 	resp := ApiResponse{
-		RID:     xid,
+		RID:     rid(c),
 		Code:    200,
 		Message: "message",
 		Data:    v,
@@ -34,7 +25,7 @@ func Success(c *gin.Context, v interface{}) {
 
 func Error(c *gin.Context, err error, status ...int) {
 	resp := ApiResponse{
-		RID:     c.Value("x-request-id").(string),
+		RID:     rid(c),
 		Code:    200,
 		Message: err.Error(),
 		Data:    map[string]interface{}{},
@@ -48,4 +39,12 @@ func Error(c *gin.Context, err error, status ...int) {
 		statusCode = status[0]
 	}
 	c.JSON(statusCode, resp)
+}
+
+func rid(c *gin.Context) string {
+	id := c.Value("x-request-id").(string)
+	if id == "" {
+		id = uuid.NewV4().String()
+	}
+	return id
 }
