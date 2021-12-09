@@ -32,6 +32,7 @@ func Error(c *gin.Context, err error, status ...int) {
 	if e, ok := err.(*XError); ok {
 		resp.Code = e.Code()
 	}
+
 	statusCode := http.StatusOK
 	if len(status) > 0 {
 		statusCode = status[0]
