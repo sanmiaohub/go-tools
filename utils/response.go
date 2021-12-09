@@ -29,7 +29,7 @@ func Error(c *gin.Context, err error, status ...int) {
 		Message: err.Error(),
 		Data:    map[string]interface{}{},
 	}
-	if e, ok := err.(*ErrorX); ok {
+	if e, ok := err.(*XError); ok {
 		resp.Code = e.Code()
 	}
 	statusCode := http.StatusOK
