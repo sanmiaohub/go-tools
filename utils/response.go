@@ -17,7 +17,7 @@ func Success(c *gin.Context, v interface{}) {
 	resp := ApiResponse{
 		RID:     rid(c),
 		Code:    200,
-		Message: "message",
+		Message: "success",
 		Data:    v,
 	}
 	c.JSON(200, resp)
