@@ -28,7 +28,7 @@ func Error(c *gin.Context, err error, status ...int) {
 	cc := ctx.Wrap(c)
 	resp := ApiResponse{
 		RID:     cc.ID(),
-		Code:    200,
+		Code:    999,
 		Message: err.Error(),
 		Data:    map[string]interface{}{},
 	}
