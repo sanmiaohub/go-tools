@@ -2,7 +2,7 @@ package utils
 
 import (
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"github.com/sanmiaohub/go-tools/ctx"
 	"net/http"
 )
 
@@ -14,18 +14,20 @@ type ApiResponse struct {
 }
 
 func Success(c *gin.Context, v interface{}) {
+	cc := ctx.Wrap(c)
 	resp := ApiResponse{
-		RID:     rid(c),
+		RID:     cc.ID(),
 		Code:    200,
 		Message: "success",
 		Data:    v,
 	}
-	c.JSON(200, resp)
+	c.JSON(http.StatusOK, resp)
 }
 
 func Error(c *gin.Context, err error, status ...int) {
+	cc := ctx.Wrap(c)
 	resp := ApiResponse{
-		RID:     rid(c),
+		RID:     cc.ID(),
 		Code:    200,
 		Message: err.Error(),
 		Data:    map[string]interface{}{},
@@ -34,17 +36,9 @@ func Error(c *gin.Context, err error, status ...int) {
 		resp.Code = e.Code()
 	}
 
-	statusCode := http.StatusOK
+	httpCode := http.StatusOK
 	if len(status) > 0 {
-		statusCode = status[0]
+		httpCode = status[0]
 	}
-	c.JSON(statusCode, resp)
-}
-
-func rid(c *gin.Context) string {
-	id := c.Value("x-request-id")
-	if id == nil {
-		id = uuid.NewV4().String()
-	}
-	return id.(string)
+	c.JSON(httpCode, resp)
 }
